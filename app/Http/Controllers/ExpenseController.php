@@ -22,8 +22,14 @@ class ExpenseController extends BaseController
 
     public function store(Request $request)
     {
-        $expense = Expense::create($request->all());
-        return response()->json($expense, 201);
+        $validatedData = $request->validate([
+            'description' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+        ]);
+
+        $expense = Expense::create($validatedData);
+        return response()->json(['message' => 'Gasto añadido con éxito.'], 201);
     }
 
     public function show($id)
@@ -41,8 +47,15 @@ class ExpenseController extends BaseController
         if (!$expense) {
             return response()->json(['error' => 'Expense not found'], 404);
         }
-        $expense->update($request->all());
-        return response()->json($expense);
+
+        $validatedData = $request->validate([
+            'description' => 'sometimes|required|string|max:255',
+            'amount' => 'sometimes|required|numeric',
+            'date' => 'sometimes|required|date',
+        ]);
+
+        $expense->update($validatedData);
+        return response()->json(['message' => 'Gasto actualizado con éxito.']);
     }
 
     public function destroy($id)
@@ -51,7 +64,8 @@ class ExpenseController extends BaseController
         if (!$expense) {
             return response()->json(['error' => 'Expense not found'], 404);
         }
+
         $expense->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Gasto eliminado con éxito.']);
     }
 }

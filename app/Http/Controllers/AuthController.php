@@ -28,7 +28,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json('Usuario creado con éxito', 201);
+        return response()->json(['message' => 'Usuario creado con éxito'], 201);
     }
 
     public function login(Request $request)
