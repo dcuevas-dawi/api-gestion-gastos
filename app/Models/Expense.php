@@ -18,5 +18,11 @@ class Expense extends Model
         'description',
         'amount',
         'date',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

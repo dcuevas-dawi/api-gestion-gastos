@@ -16,34 +16,44 @@ class ExpenseController extends BaseController
 
     public function index()
     {
-        $expenses = Expense::all();
+        $user = JWTAuth::parseToken()->authenticate();
+        $expenses = Expense::where('user_id', $user->id)->get();
         return response()->json($expenses);
     }
 
     public function store(Request $request)
     {
+        $user = JWTAuth::parseToken()->authenticate();
         $validatedData = $request->validate([
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date',
         ]);
 
-        $expense = Expense::create($validatedData);
+        $expense = new Expense($validatedData);
+        $expense->user_id = $user->id;
+        $expense->save();
+
         return response()->json(['message' => 'Gasto añadido con éxito.'], 201);
     }
 
     public function show($id)
     {
-        $expense = Expense::find($id);
+        $user = JWTAuth::parseToken()->authenticate();
+        $expense = Expense::where('id', $id)->where('user_id', $user->id)->first();
+
         if (!$expense) {
             return response()->json(['error' => 'Expense not found'], 404);
         }
+
         return response()->json($expense);
     }
 
     public function update(Request $request, $id)
     {
-        $expense = Expense::find($id);
+        $user = JWTAuth::parseToken()->authenticate();
+        $expense = Expense::where('id', $id)->where('user_id', $user->id)->first();
+
         if (!$expense) {
             return response()->json(['error' => 'Expense not found'], 404);
         }
@@ -60,7 +70,9 @@ class ExpenseController extends BaseController
 
     public function destroy($id)
     {
-        $expense = Expense::find($id);
+        $user = JWTAuth::parseToken()->authenticate();
+        $expense = Expense::where('id', $id)->where('user_id', $user->id)->first();
+
         if (!$expense) {
             return response()->json(['error' => 'Expense not found'], 404);
         }
