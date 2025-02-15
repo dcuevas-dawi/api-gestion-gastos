@@ -26,19 +26,22 @@ class ExpenseController extends BaseController
 
     public function store(Request $request)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        $validatedData = $request->validate([
-            'description' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'date' => 'required|date',
-            'category' => 'required|string|in:' . implode(',', self::CATEGORIES),
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            $validatedData = $request->validate([
+                'description' => 'required|string|max:255',
+                'amount' => 'required|numeric',
+                'date' => 'required|date',
+                'category' => 'required|string|in:' . implode(',', self::CATEGORIES),
             ]);
 
-        $expense = new Expense($validatedData);
-        $expense->user_id = $user->id;
-        $expense->save();
-
-        return response()->json(['message' => 'Gasto añadido con éxito.'], 201);
+            $expense = new Expense($validatedData);
+            $expense->user_id = $user->id;
+            $expense->save();
+            return response()->json(['message' => 'Gasto añadido con éxito.'], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     public function show($id)
@@ -55,24 +58,28 @@ class ExpenseController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        $expense = Expense::where('id', $id)->where('user_id', $user->id)->first();
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            $expense = Expense::where('id', $id)->where('user_id', $user->id)->first();
 
-        if (!$expense) {
-            return response()->json(['error' => 'Expense not found'], 404);
+            if (!$expense) {
+                return response()->json(['error' => 'Expense not found'], 404);
+            }
+
+            $validatedData = $request->validate([
+                'description' => 'sometimes|required|string|max:255',
+                'amount' => 'sometimes|required|numeric',
+                'date' => 'sometimes|required|date',
+                'category' => 'sometimes|required|string|in:' . implode(',', self::CATEGORIES),
+            ]);
+
+            $expense->fill($validatedData);
+            $expense->save();
+
+            return response()->json(['message' => 'Gasto actualizado con éxito.']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
         }
-
-        $validatedData = $request->validate([
-            'description' => 'sometimes|required|string|max:255',
-            'amount' => 'sometimes|required|numeric',
-            'date' => 'sometimes|required|date',
-            'category' => 'sometimes|required|string|in:' . implode(',', self::CATEGORIES),
-        ]);
-
-        $expense->fill($validatedData);
-        $expense->save();
-
-        return response()->json(['message' => 'Gasto actualizado con éxito.']);
     }
 
     public function destroy($id)
