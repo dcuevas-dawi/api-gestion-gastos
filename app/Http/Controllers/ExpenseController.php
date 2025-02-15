@@ -94,4 +94,17 @@ class ExpenseController extends BaseController
         $expense->delete();
         return response()->json(['message' => 'Gasto eliminado con éxito.']);
     }
+
+    public function getByCategory($category)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if (!in_array($category, self::CATEGORIES)) {
+            return response()->json(['error' => 'Categoria incorrecta'], 422);
+        }
+
+        $expenses = Expense::where('user_id', $user->id)->where('category', $category)->get();
+
+        return response()->json($expenses);
+    }
 }
