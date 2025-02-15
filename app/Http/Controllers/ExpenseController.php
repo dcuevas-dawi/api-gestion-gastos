@@ -9,6 +9,9 @@ use Illuminate\Routing\Controller as BaseController;
 
 class ExpenseController extends BaseController
 {
+    private const CATEGORIES = [
+        'comestibles', 'ocio', 'electronica', 'utilidades', 'ropa', 'salud', 'coleccionables', 'transporte', 'juegos', 'otros'
+    ];
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -28,7 +31,8 @@ class ExpenseController extends BaseController
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-        ]);
+            'category' => 'required|string|in:' . implode(',', self::CATEGORIES),
+            ]);
 
         $expense = new Expense($validatedData);
         $expense->user_id = $user->id;
@@ -62,9 +66,12 @@ class ExpenseController extends BaseController
             'description' => 'sometimes|required|string|max:255',
             'amount' => 'sometimes|required|numeric',
             'date' => 'sometimes|required|date',
+            'category' => 'sometimes|required|string|in:' . implode(',', self::CATEGORIES),
         ]);
 
-        $expense->update($validatedData);
+        $expense->fill($validatedData);
+        $expense->save();
+
         return response()->json(['message' => 'Gasto actualizado con éxito.']);
     }
 
