@@ -1,66 +1,301 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Aquí tienes la documentación para tu API de gestión de gastos:
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# API de Gestión de Gastos
 
-## About Laravel
+Esta API permite gestionar los gastos de los usuarios, incluyendo la creación, actualización, eliminación y obtención de gastos.
+Cada usuario solo tiene acceso a sus propios gastos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Cada gasto tiene los siguientes campos:
+- `id`: ID del gasto.
+- `description`: descripción del gasto.
+- `amount`: cantidad gastada.
+- `date`: fecha del gasto.
+- `created_at`: fecha de creación del gasto.
+- `updated_at`: fecha de actualización del gasto.
+- `user_id`: ID del usuario que creó el gasto.
+- `category`: categoría del gasto.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Las únicas categorias permitidas son: 'comestibles', 'ocio', 'electronica', 'utilidades', 'ropa', 'salud', 'coleccionables', 'transporte', 'juegos', 'otros'.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Para cada acción a realizar en la API, la haremos a través de Postman.
 
-## Learning Laravel
+Dejaré una petición de prueba lista para ser copiada/pegada en Postman. Lo único a tener en cuenta será cambiar el token de autenticación.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalación
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Para instalar la API, sigue estos pasos:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Uso en Postman
 
-## Laravel Sponsors
+Al abrirlo, podremos copiar las solicitudes que se encuentran en la documentación y directamente en el campo de la url.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Más adelante se explica en ams detalle, pero solo mencionar que, aunque las peticiones están listas pare copiar/pegar, se debe tener en cuenta que en el header se debe cambiar el token que recibamos para nuestro usuario.
 
-### Premium Partners
+![Postman](storage/postman.png)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Autenticación
 
-## Contributing
+La API utiliza autenticación JWT. 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Registro
 
-## Code of Conduct
+Para registrarte como usuario, esta es la solicitud que debes enviar:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+curl --location 'http://127.0.0.1:8000/api/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"name": "Ejemplo",
+"email": "ejemplo@ejemplo.com",
+"password": "ejemplo1234",
+"password_confirmation": "ejemplo1234"
+}'
+```
 
-## Security Vulnerabilities
+La respuesta será:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```json
+{
+    "message": "Usuario registrado con éxito"
+}
+```
 
-## License
+### Autenticación
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Para autenticarte, la solicitud será:
+
+```bash
+curl --location 'http://127.0.0.1:8000/api/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"email": "dani@dani.com",
+"password": "danidani"
+}'
+```
+
+Obtendremos una respuesta de este estilo:
+
+```bash
+{
+"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.
+      eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIi
+      wiaWF0IjoxNzM5NjQ2NzY4LCJleHAiOjE3Mzk2NTAzNjgsIm5iZiI6
+      MTczOTY0Njc2OCwianRpIjoiN0cwMGJWcnFiQk05RTNUWSIsInN1Yi
+      I6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4
+      NzJkYjdhNTk3NmY3In0.
+      iJ2adlUyi3OScqsIqSt_5azcSw_hBquWPsSKFtSQQH8"
+}
+```
+
+Este token es necesario para autenticar las solicitudes a la API y tiene una caducidad de 1 hora.
+
+Debes incluir este token en el encabezado `Authorization` de cada solicitud.
+
+![Token](storage/token.png)
+
+En el cambo 'value' solo debemos cambiar el token sin quitar el 'Bearer '.
+
+También es importante incluir en el header: 'Content-Type: application/json' para evitar errores.
+
+
+## Endpoints
+
+### Obtener todos los gastos
+
+**GET** `/api/expenses`
+
+Obtiene todos los gastos del usuario autenticado.
+
+**Petición:**
+```bash
+curl --location 'http://127.0.0.1:8000/api/expenses' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5NjQ1MDY5LCJleHAiOjE3Mzk2NDg2NjksIm5iZiI6MTczOTY0NTA2OSwianRpIjoiQWdFenhLNWVoZFE2S1FxdCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.sWMRmBqXb6c2exhGu0pYZ0jQUQSjFA-C9iVrFX6_VdA' \
+--header 'Content-Type: application/json'
+``` 
+
+**Respuesta:**
+- `200 OK` con la lista de gastos.
+
+```json
+[
+    {
+        "id": 1,
+        "description": "Compra de figura coleccionable",
+        "amount": 79.99,
+        "date": "2024-02-08",
+        "created_at": "2025-02-15T18:44:43.000000Z",
+        "updated_at": "2025-02-15T18:44:43.000000Z",
+        "user_id": 1,
+        "category": "coleccionables"
+    },
+    {
+        "id": 2,
+        "description": "Compra de oficina",
+        "amount": 150.75,
+        "date": "2023-10-16",
+        "created_at": "2025-02-15T18:45:00.000000Z",
+        "updated_at": "2025-02-15T18:45:00.000000Z",
+        "user_id": 1,
+        "category": "otros"
+    }
+]
+```
+    
+
+### Crear un gasto
+
+**POST** `/api/expenses`
+
+Crea un nuevo gasto para el usuario autenticado.
+
+**Petición:**
+
+```bash
+curl --location 'http://127.0.0.1:8000/api/expenses' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5NjQ1MDY5LCJleHAiOjE3Mzk2NDg2NjksIm5iZiI6MTczOTY0NTA2OSwianRpIjoiQWdFenhLNWVoZFE2S1FxdCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.sWMRmBqXb6c2exhGu0pYZ0jQUQSjFA-C9iVrFX6_VdA' \
+--header 'Content-Type: application/json' \
+--data '{
+  "description": "Compra de figura coleccionable",
+  "amount": 79.99,
+  "date": "2024-02-08",
+  "category": "coleccionables"
+}'
+```
+
+**Respuesta:**
+- `201 Created` con el mensaje de éxito.
+- `422 Unprocessable Entity` si hay errores de validación.
+
+### Obtener un gasto por ID
+
+**GET** `/api/expenses/{id}`
+
+Obtiene un gasto específico por su ID.
+
+**Petición:**
+
+```bash
+curl --location 'http://127.0.0.1:8000/api/expenses' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5NjQ1MDY5LCJleHAiOjE3Mzk2NDg2NjksIm5iZiI6MTczOTY0NTA2OSwianRpIjoiQWdFenhLNWVoZFE2S1FxdCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.sWMRmBqXb6c2exhGu0pYZ0jQUQSjFA-C9iVrFX6_VdA' \
+--header 'Content-Type: application/json' \
+--data '{
+  "description": "Compra de figura coleccionable",
+  "amount": 79.99,
+  "date": "2024-02-08",
+  "category": "coleccionables"
+}'
+```
+
+**Respuesta:**
+- `200 OK` con los detalles del gasto.
+- `404 Not Found` si el gasto no existe.
+
+### Obtener gastos por categoría
+
+**GET** `/api/expenses/category/{category}`
+
+Obtiene todos los gastos de una categoría específica.
+
+**Petición:**
+
+```bash
+curl --location 'http://127.0.0.1:8000/api/expenses/category/transporte' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5NjQwMzE1LCJleHAiOjE3Mzk2NDM5MTUsIm5iZiI6MTczOTY0MDMxNSwianRpIjoidGJoaEs4RDZESzhPNlRndyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.tyFHV2AMCeJQxQQ330q56C3ZDybxQ_-OzaYuDcysB7k' \
+--header 'Content-Type: application/json'
+```
+
+**Respuesta:**
+- `200 OK` con la lista de gastos.
+- `422 Unprocessable Entity` si la categoría es inválida.
+
+### Categorías
+
+Las categorías válidas para los gastos son:
+- `comestibles`
+- `ocio`
+- `electronica`
+- `utilidades`
+- `ropa`
+- `salud`
+- `coleccionables`
+- `transporte`
+- `juegos`
+- `otros`
+
+### Actualizar un gasto
+
+**PUT** `/api/expenses/{id}`
+
+Actualiza un gasto existente.
+
+**Petición**
+
+```bash
+curl --location --request PUT 'http://127.0.0.1:8000/api/expenses/7' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5NjQ4OTM4LCJleHAiOjE3Mzk2NTI1MzgsIm5iZiI6MTczOTY0ODkzOCwianRpIjoib1p3MnFIT21kR2FDdk00UyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.DomQQbEqfg8RmCHC7mCAHivC6567GssNY1yrvs1HZok' \
+--header 'Content-Type: application/json' \
+--data '{
+  "category": "ocio"
+}'
+```
+Podemos poner tantos campos como queramos actualizar.
+
+
+**Respuesta:**
+- `200 OK` con el mensaje de éxito.
+- `404 Not Found` si el gasto no existe.
+- `422 Unprocessable Entity` si hay errores de validación.
+
+### Eliminar un gasto
+
+**DELETE** `/api/expenses/{id}`
+
+Elimina un gasto existente.
+
+**Petición:**
+
+```bash
+curl --location --request DELETE 'http://127.0.0.1:8000/api/expenses/5' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5NjQ4OTM4LCJleHAiOjE3Mzk2NTI1MzgsIm5iZiI6MTczOTY0ODkzOCwianRpIjoib1p3MnFIT21kR2FDdk00UyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.DomQQbEqfg8RmCHC7mCAHivC6567GssNY1yrvs1HZok' \
+--header 'Content-Type: application/json' \
+--data ''
+```
+
+**Respuesta:**
+- `200 OK` con el mensaje de éxito.
+- `404 Not Found` si el gasto no existe.
+
+## Ejemplos para la base de datos
+
+Si deseamos hacer pruebas con la base de datos, podemos ejecutar un seeder que dejo preparado con 10 gastos. Para evitar problemas, primero creamos un usuario y luego ejecutamos el seeder.
+
+Para ello, ejecutamos el siguiente comando: 
+
+```bash
+    php artisan db:seed
+```
+
+Con ello, tendremos 10 gastos de prueba para poder hacer pruebas con la API.
+
+
+## Testing
+
+**Precaución:** Los tests eliminan los datos de la base de datos, por lo que es recomendable hacer una copia de seguridad antes de ejecutarlos. Esto se debe a que se utilizan factories para generar gastos y usuarios ficticios en los test y se elimina todo al finalizar. 
+
+Para ejecutar las pruebas, ejecutamos el siguiente comando:
+
+```bash
+    php artisan test
+```
+
+Los test están en el archivo `ExpenseTest.php` en la carpeta `tests/Feature`.
+
+Hay un total de 8 test que testean: 
+
+- Crear un gasto
+- Actualizar un gasto
+- Eliminar un gasto
+- Obtener todos los gastos
+- Obtener gastos por categoría
+- Obtener un gasto por ID
+- Comprobar que una categoría es incorrecta
