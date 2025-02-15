@@ -93,4 +93,31 @@ class ExpenseTest extends TestCase
 
         $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
     }
+
+    public function test_can_get_expense_by_id()
+    {
+        $expense = Expense::factory()->create(['user_id' => $this->user->id, 'category' => 'otros']);
+
+        $response = $this->getJson('/api/expenses/' . $expense->id, ['Authorization' => 'Bearer ' . $this->token]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $expense->id,
+                'description' => $expense->description,
+                'amount' => $expense->amount,
+                'date' => $expense->date,
+                'category' => 'otros',
+                'user_id' => $expense->user_id,
+            ])
+            ->assertJsonStructure([
+                'id',
+                'description',
+                'amount',
+                'date',
+                'category',
+                'user_id',
+                'created_at',
+                'updated_at',
+            ]);
+    }
 }
