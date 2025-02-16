@@ -25,7 +25,44 @@ Dejaré una petición de prueba lista para ser copiada/pegada en Postman. Lo ún
 
 Para instalar la API, sigue estos pasos:
 
-**FALTA DOCUMENTAR LA INSTALACION Y COMENTAR EL CODIGO**
+1. Clona el repositorio:
+```bash
+git clone https://github.com/SwagDAWnDual/api-gestion-gastos-dcuevas-dawi.git
+o
+git clone https://github.com/dcuevas-dawi/api-gestion-gastos.git
+
+Dependiendo del repositorio al que se tenga acceso.
+```
+2. Instala las dependencias:
+```bash
+cd api-gestion-gastos
+php composer install (El proyecto ya tiene composer instalado y se puede ejecutar con el 'php' delante, pero si falla y tienes composer en tu máquina, simplemente ejecuta 'composer install')
+npm install (Puede tardar un poco)
+npm run build
+```
+
+3. Creamos el archivo de configuración de entorno .env:
+```bash
+cp .env.example .env
+```
+
+4. Generamos la clave de la aplicación y la clave secreta de JWT:
+```bash
+php artisan key:generate
+php artisan jwt:secret
+```
+5. Migrar la base de datos:
+```bash
+php artisan migrate
+```
+> **Nota**: Quizás de una advertencia de que no se ha encontrado la base de datos, pero nos preguntará si deseamos crearla, así que seleccionamos 'yes'.
+
+6. Ejecutar el servidor:
+```bash
+php artisan serve
+```
+
+En este punto ya tenemos la api funcionando lista para recibir peticiones.
 
 ## Uso en Postman
 
