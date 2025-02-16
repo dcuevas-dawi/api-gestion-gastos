@@ -1,6 +1,16 @@
-Aquí tienes la documentación para tu API de gestión de gastos:
-
 # API de Gestión de Gastos
+
+Índice:
+
+1. Introducción
+2. Instalación
+3. Uso en Postman
+4. Autenticación
+5. Endpoints
+6. Ejemplos para la base de datos
+7. Testing
+
+## 1. Introducción
 
 Esta API permite gestionar los gastos de los usuarios, incluyendo la creación, actualización, eliminación y obtención de gastos.
 Cada usuario solo tiene acceso a sus propios gastos.
@@ -21,7 +31,9 @@ Para cada acción a realizar en la API, la haremos a través de Postman.
 
 Dejaré una petición de prueba lista para ser copiada/pegada en Postman. Lo único a tener en cuenta será cambiar el token de autenticación.
 
-## Instalación
+También dejaré explicado como llenar la base de datos con gastos de prueba y los test que se han realizado.
+
+## 2. Instalación
 
 Para instalar la API, sigue estos pasos:
 
@@ -64,7 +76,7 @@ php artisan serve
 
 En este punto ya tenemos la api funcionando lista para recibir peticiones.
 
-## Uso en Postman
+## 3. Uso en Postman
 
 Al abrirlo, podremos copiar las solicitudes que se encuentran en la documentación y directamente en el campo de la url.
 
@@ -72,7 +84,7 @@ Más adelante se explica en ams detalle, pero solo mencionar que, aunque las pet
 
 ![Postman](storage/postman.png)
 
-## Autenticación
+## 4. Autenticación
 
 La API utiliza autenticación JWT. 
 
@@ -137,7 +149,7 @@ En el cambo 'value' solo debemos cambiar el token sin quitar el 'Bearer '.
 También es importante incluir en el header: 'Content-Type: application/json' para evitar errores.
 
 
-## Endpoints
+## 5. Endpoints
 
 ### Obtener todos los gastos
 
@@ -304,7 +316,7 @@ curl --location --request DELETE 'http://127.0.0.1:8000/api/expenses/5' \
 - `200 OK` con el mensaje de éxito.
 - `404 Not Found` si el gasto no existe.
 
-## Ejemplos para la base de datos
+## 6. Ejemplos para la base de datos
 
 Si deseamos hacer pruebas con la base de datos, podemos ejecutar un seeder que dejo preparado con 10 gastos. Para evitar problemas, primero creamos un usuario y luego ejecutamos el seeder.
 
@@ -317,7 +329,7 @@ Para ello, ejecutamos el siguiente comando:
 Con ello, tendremos 10 gastos de prueba para poder hacer pruebas con la API.
 
 
-## Testing
+## 7. Testing
 
 **Precaución:** Los tests eliminan los datos de la base de datos, por lo que es recomendable hacer una copia de seguridad antes de ejecutarlos. Esto se debe a que se utilizan factories para generar gastos y usuarios ficticios en los test y se elimina todo al finalizar. 
 
@@ -329,7 +341,7 @@ Para ejecutar las pruebas, ejecutamos el siguiente comando:
 
 Los test están en el archivo `ExpenseTest.php` en la carpeta `tests/Feature`.
 
-Hay un total de 8 test que testean: 
+Hay un total de 7 test que testean: 
 
 - Crear un gasto
 - Actualizar un gasto
