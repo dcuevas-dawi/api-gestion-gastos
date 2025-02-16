@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
+// Definir la factoría para el modelo User. Esto se encarga de generar usuarios falsos para pruebas
 class UserFactory extends Factory
 {
     /**

@@ -7,16 +7,20 @@ use App\Models\Expense;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Routing\Controller as BaseController;
 
+// Clase para gestionar los gastos
 class ExpenseController extends BaseController
 {
+    // Categorias de gastos permitidas
     private const CATEGORIES = [
         'comestibles', 'ocio', 'electronica', 'utilidades', 'ropa', 'salud', 'coleccionables', 'transporte', 'juegos', 'otros'
     ];
+    // Middleware para autenticación con JWT
     public function __construct()
     {
         $this->middleware('auth:api');
     }
 
+    // Método para el endpoint GET /expenses que devuelve todos los gastos del usuario autenticado
     public function index()
     {
         $user = JWTAuth::parseToken()->authenticate();
@@ -24,6 +28,7 @@ class ExpenseController extends BaseController
         return response()->json($expenses);
     }
 
+    // Método para el endpoint POST /expenses que añade un gasto
     public function store(Request $request)
     {
         try {
@@ -44,6 +49,7 @@ class ExpenseController extends BaseController
         }
     }
 
+    // Método para el endpoint GET /expenses/{id} que devuelve un gasto por su id
     public function show($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
@@ -56,6 +62,7 @@ class ExpenseController extends BaseController
         return response()->json($expense);
     }
 
+    // Método para el endpoint PUT /expenses/{id} que actualiza un gasto por su id
     public function update(Request $request, $id)
     {
         try {
@@ -82,6 +89,7 @@ class ExpenseController extends BaseController
         }
     }
 
+    // Método para el endpoint DELETE /expenses/{id} que elimina un gasto por su id
     public function destroy($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
@@ -95,6 +103,7 @@ class ExpenseController extends BaseController
         return response()->json(['message' => 'Gasto eliminado con éxito.']);
     }
 
+    // Método para el endpoint GET /expenses/category/{category} que devuelve los gastos de una categoría
     public function getByCategory($category)
     {
         $user = JWTAuth::parseToken()->authenticate();

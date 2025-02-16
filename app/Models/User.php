@@ -17,6 +17,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var list<string>
      */
+    // Campos de los usuarios a rellenar por el usuario
     protected $fillable = [
         'name',
         'email',
@@ -46,6 +47,7 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    // Métodos para JWT
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -54,10 +56,5 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

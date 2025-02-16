@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+// Clase para gestionar el registro y login de usuarios
 class AuthController extends Controller
 {
     public function register(Request $request)

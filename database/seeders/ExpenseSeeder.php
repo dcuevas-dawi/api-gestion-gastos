@@ -11,9 +11,11 @@ class ExpenseSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+
+    // Clase para rellenar la tabla de gastos con datos de muestra
     public function run(): void
     {
-        $user = User::first(); // Assuming you have at least one user
+        $user = User::first();
 
         $expenses = [
             [

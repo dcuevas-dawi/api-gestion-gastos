@@ -14,6 +14,7 @@ class Expense extends Model
      *
      * @var array<int, string>
      */
+    // Campos de los gastos a rellenar por el usuario
     protected $fillable = [
         'description',
         'amount',
@@ -22,6 +23,7 @@ class Expense extends Model
         'category',
     ];
 
+    // Relación con el modelo User, un gasto pertenece a un usuario
     public function user()
     {
         return $this->belongsTo(User::class);

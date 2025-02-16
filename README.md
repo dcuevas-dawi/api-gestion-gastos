@@ -15,7 +15,7 @@ Cada gasto tiene los siguientes campos:
 - `user_id`: ID del usuario que creó el gasto.
 - `category`: categoría del gasto.
 
-Las únicas categorias permitidas son: 'comestibles', 'ocio', 'electronica', 'utilidades', 'ropa', 'salud', 'coleccionables', 'transporte', 'juegos', 'otros'.
+Las únicas categorías permitidas son: 'comestibles', 'ocio', 'electronica', 'utilidades', 'ropa', 'salud', 'coleccionables', 'transporte', 'juegos', 'otros'.
 
 Para cada acción a realizar en la API, la haremos a través de Postman.
 
@@ -24,6 +24,8 @@ Dejaré una petición de prueba lista para ser copiada/pegada en Postman. Lo ún
 ## Instalación
 
 Para instalar la API, sigue estos pasos:
+
+**FALTA DOCUMENTAR LA INSTALACION Y COMENTAR EL CODIGO**
 
 ## Uso en Postman
 

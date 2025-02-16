@@ -9,9 +9,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Rutas sin login, solo para registro y login
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
+// Rutas protegidas por autenticación, una para cada endpint
 Route::middleware('auth:api')->group(function () {
     Route::get('expenses', [ExpenseController::class, 'index']);
     Route::post('expenses', [ExpenseController::class, 'store']);
